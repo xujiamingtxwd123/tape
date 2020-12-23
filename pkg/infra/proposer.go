@@ -131,6 +131,9 @@ func (b *Broadcaster) Start(envs <-chan *Elements, errorCh chan error, done <-ch
 	for {
 		select {
 		case e := <-envs:
+			// 添加限流器
+			limiter.Wait(context.Background())
+
 			err := b.c.Send(e.Envelope)
 			if err != nil {
 				errorCh <- err

@@ -9,11 +9,13 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+
 type Config struct {
 	Endorsers     []Node   `yaml:"endorsers"`
 	EndorsersCount int     `yaml:"endorsers_count"`
 	Committer     Node     `yaml:"committer"`
 	Orderer       Node     `yaml:"orderer"`
+	LimitBucket   int      `yaml:"limit_bucket"`
 	Channel       string   `yaml:"channel"`
 	Chaincode     string   `yaml:"chaincode"`
 	Version       string   `yaml:"version"`
@@ -60,6 +62,7 @@ func LoadConfig(f string) (Config, error) {
 	if err != nil {
 		return config, err
 	}
+
 	return config, nil
 }
 

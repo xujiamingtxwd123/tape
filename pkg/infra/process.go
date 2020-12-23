@@ -4,9 +4,12 @@ import (
 	"fmt"
 	"time"
 
+	"golang.org/x/time/rate"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 )
+
+var limiter *rate.Limiter
 
 func Process(configPath string, num int, logger *log.Logger) error {
 	config, err := LoadConfig(configPath)
@@ -25,6 +28,9 @@ func Process(configPath string, num int, logger *log.Logger) error {
 	finishCh := make(chan struct{})
 	errorCh := make(chan error, 10)
 	assember := &Assembler{Signer: crypto, SignCount: config.EndorsersCount}
+
+	limiter = rate.NewLimiter(rate.Limit(config.LimitBucket), config.LimitBucket * 2)
+
 
 	for i := 0; i < len(config.Endorsers); i++ {
 		signed[i] = make(chan *Elements, 10)
