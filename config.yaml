@@ -15,6 +15,8 @@ orderer1: &orderer1
 endorsers:
   - *peer1
   - *peer2
+
+endorsers_count: 1
 # we might support multi-committer in the future for more complex test scenario,
 # i.e. consider tx committed only if it's done on >50% of nodes. But for now,
 # it seems sufficient to support single committer.
@@ -25,9 +27,7 @@ orderer: *orderer1
 channel: mychannel
 chaincode: basic
 args:
-  - TransferAsset
-  - asset6
-  - zhangsan
+  - GetAllAssets
 mspid: Org1MSP
 private_key: /Users/xujiaming/project/goproject/src/github.com/hyperledger/fabric/scripts/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/priv_sk
 sign_cert: /Users/xujiaming/project/goproject/src/github.com/hyperledger/fabric/scripts/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/signcerts/User1@org1.example.com-cert.pem

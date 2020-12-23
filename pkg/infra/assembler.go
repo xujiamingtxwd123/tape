@@ -1,6 +1,7 @@
 package infra
 
 import (
+	"math/rand"
 	"sync"
 
 	"github.com/hyperledger/fabric-protos-go/common"
@@ -16,7 +17,8 @@ type Elements struct {
 }
 
 type Assembler struct {
-	Signer *Crypto
+	Signer 			*Crypto
+	SignCount 		int
 }
 
 func (a *Assembler) assemble(e *Elements) (*Elements, error) {
@@ -47,8 +49,14 @@ func (a *Assembler) StartSigner(raw chan *Elements, signed []chan *Elements, err
 				errorCh <- err
 				return
 			}
-			for _, v := range signed {
-				v <- t
+
+			index := rand.Intn(100) % len(signed)
+			if a.SignCount == 1 {
+				signed[index] <- t
+			} else {
+				for _, v := range signed {
+					v <- t
+				}
 			}
 		case <-done:
 			return

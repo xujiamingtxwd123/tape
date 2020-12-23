@@ -11,6 +11,7 @@ import (
 
 type Config struct {
 	Endorsers     []Node   `yaml:"endorsers"`
+	EndorsersCount int     `yaml:"endorsers_count"`
 	Committer     Node     `yaml:"committer"`
 	Orderer       Node     `yaml:"orderer"`
 	Channel       string   `yaml:"channel"`

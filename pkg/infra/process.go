@@ -24,7 +24,7 @@ func Process(configPath string, num int, logger *log.Logger) error {
 	done := make(chan struct{})
 	finishCh := make(chan struct{})
 	errorCh := make(chan error, 10)
-	assember := &Assembler{Signer: crypto}
+	assember := &Assembler{Signer: crypto, SignCount: config.EndorsersCount}
 
 	for i := 0; i < len(config.Endorsers); i++ {
 		signed[i] = make(chan *Elements, 10)
