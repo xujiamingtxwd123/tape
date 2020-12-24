@@ -2,14 +2,16 @@ package infra
 
 import (
 	"context"
-	"io"
-
 	"github.com/hyperledger/fabric-protos-go/common"
 	"github.com/hyperledger/fabric-protos-go/orderer"
 	"github.com/hyperledger/fabric-protos-go/peer"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
+	"io"
+	"sync/atomic"
 )
+
+var tpsCalc int32
 
 type Proposers struct {
 	workers [][]*Proposer
@@ -133,6 +135,8 @@ func (b *Broadcaster) Start(envs <-chan *Elements, errorCh chan error, done <-ch
 		case e := <-envs:
 			// 添加限流器
 			limiter.Wait(context.Background())
+			//TPS记录
+			atomic.AddInt32(&tpsCalc, 1)
 
 			err := b.c.Send(e.Envelope)
 			if err != nil {

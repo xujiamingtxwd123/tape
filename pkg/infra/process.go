@@ -2,6 +2,7 @@ package infra
 
 import (
 	"fmt"
+	"sync/atomic"
 	"time"
 
 	"golang.org/x/time/rate"
@@ -57,6 +58,9 @@ func Process(configPath string, num int, logger *log.Logger) error {
 		return err
 	}
 
+
+	go TpsCalc(done)
+
 	start := time.Now()
 	go observer.Start(num, errorCh, finishCh, start)
 	go func() {
@@ -95,5 +99,23 @@ func Process(configPath string, num int, logger *log.Logger) error {
 			fmt.Printf("tx: %d, duration: %+v, tps: %f\n", num, duration, float64(num)/duration.Seconds())
 			return nil
 		}
+	}
+}
+
+func TpsCalc(done <-chan struct{}) {
+	var start,end int32
+	for {
+
+		time.Sleep(10 * time.Second)
+
+		select {
+		case <-done:
+			return
+		default:
+		}
+
+		end = atomic.LoadInt32(&tpsCalc)
+		fmt.Printf("tx count:%d, tps:%v\n", tpsCalc, (end - start) / 10.0)
+		start = end
 	}
 }
