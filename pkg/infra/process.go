@@ -31,7 +31,6 @@ func Process(configPath string, num int, logger *log.Logger) error {
 
 	limiter = rate.NewLimiter(rate.Limit(config.LimitBucket), config.LimitBucket * 2)
 
-
 	for i := 0; i < len(config.Endorsers); i++ {
 		signed[i] = make(chan *Elements, 10)
 	}
@@ -62,6 +61,13 @@ func Process(configPath string, num int, logger *log.Logger) error {
 	go observer.Start(num, errorCh, finishCh, start)
 	go func() {
 		for i := 0; i < num; i++ {
+			uuid, err := getuuid()
+			if err != nil {
+				logger.Errorf(err.Error())
+				continue
+			}
+			config.Args[1] = uuid
+			config.Args[2] = uuid
 			prop, err := CreateProposal(
 				crypto,
 				config.Channel,

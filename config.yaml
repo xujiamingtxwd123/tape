@@ -25,13 +25,15 @@ orderer: *orderer1
 
 # Invocation configs
 channel: mychannel
-chaincode: basic
+chaincode: fabcar
 args:
-  - GetAllAssets
+  - invoke
+  - zhangsan
+  - 15
 mspid: Org1MSP
 private_key: /Users/xujiaming/project/goproject/src/github.com/hyperledger/fabric/scripts/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/priv_sk
 sign_cert: /Users/xujiaming/project/goproject/src/github.com/hyperledger/fabric/scripts/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/signcerts/User1@org1.example.com-cert.pem
-num_of_conn: 1
-client_per_conn: 1
+num_of_conn: 5
+client_per_conn: 5
 #限流器 每秒发送量
 limit_bucket: 20
