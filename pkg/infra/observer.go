@@ -9,6 +9,9 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+
+
+var BlockTxCount int32
 type Observer struct {
 	d      peer.Deliver_DeliverFilteredClient
 	logger *log.Logger
@@ -55,6 +58,9 @@ func (o *Observer) Start(N int, errorCh chan error, finishCh chan struct{}, now 
 		fb := r.Type.(*peer.DeliverResponse_FilteredBlock)
 		n = n + len(fb.FilteredBlock.FilteredTransactions)
 
-		fmt.Printf("Time %8.2fs\tBlock %6d\tTx %6d\n", time.Since(now).Seconds(), fb.FilteredBlock.Number, len(fb.FilteredBlock.FilteredTransactions))
+		BlockTxCount = int32(n)
+
+		fmt.Printf("Time %8.2fs\tBlock %6d\tTx %6d\t\n", time.Since(now).Seconds(),
+			fb.FilteredBlock.Number, len(fb.FilteredBlock.FilteredTransactions))
 	}
 }

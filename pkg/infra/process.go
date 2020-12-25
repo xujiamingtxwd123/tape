@@ -114,7 +114,8 @@ func Process(configPath string, num int, logger *log.Logger) error {
 }
 
 func TpsCalc(done <-chan struct{}) {
-	var start,end int32
+	var clientStart,clientEnd int32
+	var serverStart,serverEnd int32
 	for {
 
 		time.Sleep(10 * time.Second)
@@ -125,8 +126,11 @@ func TpsCalc(done <-chan struct{}) {
 		default:
 		}
 
-		end = atomic.LoadInt32(&tpsCalc)
-		fmt.Printf("tx count:%d, tps:%v\n", tpsCalc, (end - start) / 10.0)
-		start = end
+		serverEnd = BlockTxCount
+		clientEnd = atomic.LoadInt32(&tpsCalc)
+		fmt.Printf("tx count:%d, client tps:%v, server tps:%v\n",
+			tpsCalc, (clientEnd - clientStart) / 10.0, (serverEnd - serverStart) / 10.0)
+		clientStart = clientEnd
+		serverStart = serverEnd
 	}
 }

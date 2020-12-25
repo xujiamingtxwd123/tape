@@ -36,4 +36,4 @@ sign_cert: /Users/xujiaming/project/goproject/src/github.com/hyperledger/fabric/
 num_of_conn: 15
 client_per_conn: 15
 #限流器 每秒发送量
-limit_bucket: 100
+limit_bucket: 20
